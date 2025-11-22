@@ -13,7 +13,11 @@ export default function Footer() {
           {/* Brand + Contact */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
-              <Smartphone className="h-8 w-8 text-orange-500" />
+              <img
+                src="/m1m.jpg"
+                alt="M1 Mobiles Logo"
+                className="h-15 w-15 object-contain"
+              />
               <span className="text-2xl font-bold">M1 Mobiles</span>
             </div>
 
@@ -25,7 +29,7 @@ export default function Footer() {
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-gray-400">
                 <MapPin className="h-4 w-4" />
-                <span>123 Tech Street, Mobile City</span>
+                <a href="https://maps.app.goo.gl/WWdK1GFpnm4iw3wHA">3rd floor, AKR Corniche Center</a>
               </div>
 
               <div className="flex items-center space-x-2 text-gray-400">
