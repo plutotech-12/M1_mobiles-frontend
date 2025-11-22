@@ -37,8 +37,12 @@ export default function Header({ cartCount = 0, onCartClick, onSearch }) {
         <div className="flex justify-between items-center h-16">
           
           {/* Brand */}
-          <div className="flex items-center space-x-2">
-            <Smartphone className="h-8 w-8 text-orange-600" />
+          <div className="flex items-center space-x-3">
+            <img
+              src="/m1m.jpg"
+              alt="M1 Mobiles Logo"
+              className="h-15 w-15 object-contain"
+            />
             <span className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
               M1 Mobiles
             </span>
