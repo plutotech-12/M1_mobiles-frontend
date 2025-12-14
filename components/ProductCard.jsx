@@ -1,96 +1,158 @@
 "use client";
 
-import { ShoppingCart, CheckCircle } from "lucide-react";
+import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
 
-export default function ProductCard({ product, onAddToCart }) {
+export default function ProductCard({ product }) {
   const discount = product.original_price
     ? Math.round(
-        ((product.original_price - product.price) / product.original_price) * 100
+        ((product.original_price - product.price) /
+          product.original_price) *
+          100
       )
     : 0;
 
-  return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
+  const mainImage = Array.isArray(product.image)
+    ? product.image[0]
+    : product.image || product.image_url;
 
-      {/* Image Section */}
-      <div className="relative overflow-hidden">
+  return (
+    <div className="
+      bg-white
+      rounded-xl
+      border border-gray-100
+      shadow-sm
+      hover:shadow-lg
+      transition-all
+      duration-300
+      flex
+      flex-col
+      h-full
+    ">
+      {/* IMAGE */}
+      <Link
+        href={`/products/${product._id}`}
+        className="relative flex items-center justify-center h-44 bg-white"
+      >
         <img
-          src={product.image || product.image_url}
+          src={mainImage}
           alt={product.name}
-          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+          className="max-h-40 object-contain transition-transform duration-300 hover:scale-105"
         />
 
-        {/* Condition Badges */}
-        {product.condition === "refurbished" && (
-          <span className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-            Refurbished
+        {/* CONDITION */}
+        {product.subCategory && (
+          <span className="absolute bottom-3 left-3 bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+            {product.subCategory}
           </span>
         )}
 
-        {product.condition === "new" && (
-          <span className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-            New
-          </span>
-        )}
-
-        {/* Discount */}
+        {/* DISCOUNT */}
         {discount > 0 && (
-          <span className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+          <span className="absolute top-3 right-3 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
             {discount}% OFF
           </span>
         )}
-      </div>
+      </Link>
 
-      {/* Content */}
-      <div className="p-6 space-y-4">
-        <div>
-          <p className="text-sm text-gray-500 font-medium">{product.brand}</p>
-          <h3 className="text-xl font-bold text-gray-900 mt-1">
+      {/* CONTENT */}
+      <div className="flex flex-col flex-1 p-4">
+        {/* BRAND + NAME */}
+        <Link href={`/products/${product._id}`}>
+          <p className="text-sm text-gray-500 uppercase tracking-wide">
+            {product.brand}
+          </p>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-1 leading-snug line-clamp-2 min-h-[3rem]">
             {product.name}
           </h3>
-          <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-            {product.description}
-          </p>
+        </Link>
+
+        {/* RATINGS (RESERVED SPACE) */}
+        <div className="mt-1 min-h-[1.5rem]">
+          {product.ratingsAverage > 0 ? (
+            <span className="text-sm text-yellow-500">
+              ⭐ {product.ratingsAverage.toFixed(1)}
+            </span>
+          ) : (
+            <span className="text-sm text-gray-400">
+              No ratings yet
+            </span>
+          )}
         </div>
 
-        {/* Pricing + Add to Cart */}
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div>
-            <div className="flex items-baseline space-x-2">
-              <span className="text-2xl font-bold text-orange-600">
-                ₹{product.price.toLocaleString("en-IN")}
+        {/* PRICE + CART */}
+        <div className="pt-1 flex items-end justify-between gap-3">
+          
+          {/* PRICE BLOCK */}
+          <div
+            className="
+              flex
+              flex-col
+              sm:flex-row
+              sm:items-center
+              sm:gap-3
+            "
+          >
+            {/* SELLING PRICE (BIG) */}
+            <span className="text-xl font-extrabold text-orange-600 leading-none">
+              ₹{product.price.toLocaleString("en-IN")}
+            </span>
+
+            {/* ORIGINAL PRICE */}
+            {product.original_price && (
+              <span
+                className="
+                  text-sm
+                  text-gray-400
+                  line-through
+                  sm:text-base
+                "
+              >
+                ₹{product.original_price.toLocaleString("en-IN")}
               </span>
-
-              {product.original_price && (
-                <span className="text-sm text-gray-400 line-through">
-                  ₹{product.original_price.toLocaleString("en-IN")}
-                </span>
-              )}
-            </div>
-
-            {product.stock > 0 ? (
-              <div className="flex items-center space-x-1 text-green-600 text-sm mt-1">
-                <CheckCircle className="h-4 w-4" />
-                <span>In Stock ({product.stock})</span>
-              </div>
-            ) : (
-              <span className="text-red-600 text-sm mt-1">Out of Stock</span>
             )}
           </div>
 
-          {/* FIXED Add to Cart Button */}
+          {/* ADD TO CART */}
           <button
-            onClick={() =>
+            onClick={() => {
               document.dispatchEvent(
                 new CustomEvent("addToCart", { detail: product })
-              )
-            }
-            disabled={product.stock === 0}
-            className="bg-gradient-to-r from-orange-600 to-orange-500 text-white p-3 rounded-lg"
+              );
+
+              const cartIcon =
+                document.querySelector("#cart-icon");
+              if (cartIcon) {
+                cartIcon.classList.add("cart-shake");
+                setTimeout(
+                  () => cartIcon.classList.remove("cart-shake"),
+                  400
+                );
+              }
+
+              const toast = document.createElement("div");
+              toast.innerText = "Added to Cart!";
+              toast.className =
+                "fixed top-5 right-5 bg-orange-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in";
+              document.body.appendChild(toast);
+              setTimeout(() => toast.remove(), 1500);
+            }}
+            className="
+              flex
+              items-center
+              justify-center
+              w-11
+              h-11
+              bg-orange-600
+              text-white
+              rounded-lg
+              hover:bg-orange-700
+              transition
+            "
           >
             <ShoppingCart className="h-5 w-5" />
           </button>
-
         </div>
       </div>
     </div>

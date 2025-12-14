@@ -12,12 +12,74 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@keyframes slide-left {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slide-left {
+  animation: slide-left 0.3s ease-out;
+}
+
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* GLOBAL FORM FIELD STYLING */
+.input-field {
+  @apply w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900
+    focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition bg-white;
+}
+
+.textarea-field {
+  @apply w-full border border-gray-300 rounded-lg px-3 py-3 text-gray-900
+    focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition bg-white;
+}
+
+
+.animate-fade-in {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.text-force-dark {
+  color: #111 !important;
+}
+
+
+.cart-shake {
+  animation: cartShake 0.5s ease-in-out;
+}
+
+@keyframes cartShake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.fly-img {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  z-index: 9999;
+  pointer-events: none;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.9s ease-out;
+}
+
+
+
 
 body {
 

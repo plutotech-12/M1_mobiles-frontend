@@ -3,48 +3,63 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Smartphone, Mail, Lock, AlertCircle } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import api from "../../lib/api";  // ✅ backend connection
+import { Mail, Lock, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔥 Dummy login — replace later with real API call
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      // NO authentication yet — only UI
-      if (!email || !password) {
-        throw new Error("Email and password required");
-      }
+      const res = await api.post("/auth/login", { email, password });
 
-      // Later you will replace this with backend API:
-      // const res = await api.post("/auth/login", { email, password });
+      const { token, user: backendUser } = res.data;
 
-      setTimeout(() => {
-        setLoading(false);
-        router.push("/profile"); // redirect to profile
-      }, 800);
+      // Store user in frontend
+      login({
+        token,
+        id: backendUser._id,
+        name: backendUser.name,
+        email: backendUser.email,
+        role: backendUser.role,   // "admin" or "customer"
+      });
+
+
+
+      router.push("/");
+
     } catch (err) {
-      setError(err.message || "Failed to sign in");
+      setError(err.response?.data?.message || "Invalid email or password");
+    } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8">
+
+          {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="flex items-center space-x-2">
-              <Smartphone className="h-10 w-10 text-orange-600" />
+              <img
+              src="/m1m.jpg"
+              alt="M1 Mobiles Logo"
+              className="h-20 w-15 object-contain rounded-md"
+            />
               <span className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
                 M1 Mobiles
               </span>
@@ -65,9 +80,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Email Address
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
                 <input
@@ -75,16 +88,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500"
                   placeholder="you@example.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Password
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
                 <input
@@ -92,7 +103,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-3 text-black rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500"
                   placeholder="••••••••"
                 />
               </div>
@@ -101,7 +112,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-orange-600 to-orange-500 text-white font-bold py-3 rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+              className="w-full bg-gradient-to-r from-orange-600 to-orange-500 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-all disabled:opacity-50"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>

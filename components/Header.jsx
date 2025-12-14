@@ -2,7 +2,6 @@
 
 import {
   ShoppingCart,
-  Smartphone,
   Menu,
   X,
   Search,
@@ -13,14 +12,13 @@ import {
 import { useState } from "react";
 import Link from "next/link";
 
-import { useAuth } from "../context/AuthContext"; // ✅ ADD THIS
+import { useAuth } from "../context/AuthContext";
 
 export default function Header({ cartCount = 0, onCartClick, onSearch }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // ⭐ REAL USER FROM CONTEXT (NOT placeholder)
   const { user, logout } = useAuth();
 
   const handleSignOut = () => {
@@ -28,70 +26,68 @@ export default function Header({ cartCount = 0, onCartClick, onSearch }) {
     setUserMenuOpen(false);
   };
 
-
   return (
-    <header className="bg-gradient-to-b from-orange-50 to-white sticky top-0 z-50 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Top Bar */}
+    <header className="bg-white sticky top-0 z-50 shadow-md border-b">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6">
+
+        {/* TOP BAR */}
         <div className="flex justify-between items-center h-16">
-          
-          {/* Brand */}
-          <div className="flex items-center space-x-3">
+
+          {/* BRAND */}
+          <div className="flex items-center gap-3">
             <img
               src="/m1m.jpg"
               alt="M1 Mobiles Logo"
-              className="h-15 w-15 object-contain"
+              className="h-10 w-10 object-contain rounded-md"
             />
-            <span className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+
+            <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
               M1 Mobiles
             </span>
           </div>
 
-          {/* Desktop Icons */}
-          <div className="hidden md:flex items-center space-x-4">
-            
-            {/* Cart */}
+          {/* DESKTOP ICONS */}
+          <div className="hidden md:flex items-center gap-4">
+
+            {/* CART */}
             <button
               onClick={onCartClick}
-              className="relative p-2 text-gray-700 hover:text-orange-600 transition-colors"
+              id = "cart-icon"
+              className="relative p-2 text-gray-700 hover:text-orange-600"
             >
               <ShoppingCart className="h-6 w-6" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
             </button>
 
-            {/* User Menu */}
+            {/* USER MENU */}
             {user ? (
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 hover:bg-orange-50"
                 >
                   <User className="h-5 w-5" />
-                  <span className="text-sm font-medium">{user.email}</span>
+                  <span className="text-sm">{user.email}</span>
                 </button>
 
                 {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-2">
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 text-gray-700 hover:bg-orange-50 transition-colors flex items-center space-x-2"
+                      className="block px-4 py-2 hover:bg-orange-50 text-gray-700 flex items-center gap-2"
                       onClick={() => setUserMenuOpen(false)}
                     >
-                      <User className="h-4 w-4" />
-                      <span>My Profile</span>
+                      <User className="h-4 w-4" /> Profile
                     </Link>
-
                     <button
                       onClick={handleSignOut}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-red-50 transition-colors flex items-center space-x-2"
+                      className="w-full text-left px-4 py-2 hover:bg-red-50 text-gray-700 flex items-center gap-2"
                     >
-                      <LogOut className="h-4 w-4" />
-                      <span>Sign Out</span>
+                      <LogOut className="h-4 w-4" /> Sign Out
                     </button>
                   </div>
                 )}
@@ -99,42 +95,43 @@ export default function Header({ cartCount = 0, onCartClick, onSearch }) {
             ) : (
               <Link
                 href="/login"
-                className="px-4 py-2 bg-gradient-to-r from-orange-600 to-orange-500 text-white rounded-lg hover:shadow-lg transition-shadow font-medium text-sm"
+                className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm"
               >
                 Sign In
               </Link>
             )}
           </div>
 
-          {/* Mobile Icons */}
-          <div className="md:hidden flex items-center space-x-2">
+          {/* MOBILE ICONS */}
+          <div className="md:hidden flex items-center gap-2">
             <button
               onClick={onCartClick}
-              className="relative p-2 text-gray-700 hover:text-orange-600 transition-colors"
+              className="relative p-2 text-gray-700 hover:text-orange-600"
             >
               <ShoppingCart className="h-6 w-6" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
             </button>
 
             <button
-              className="p-2 text-gray-700"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-gray-700"
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
+
         </div>
 
-        {/* Search Bar */}
+        {/* SEARCH BAR */}
         <div className="pb-4">
-          <div className="flex items-center bg-white rounded-lg shadow-lg p-2 border-2 border-orange-200">
+          <div className="flex items-center bg-white rounded-lg shadow border overflow-hidden">
             <input
               type="text"
-              placeholder="Search for phones, accessories, brands..."
+              placeholder="Search phones, accessories..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -142,74 +139,56 @@ export default function Header({ cartCount = 0, onCartClick, onSearch }) {
                   onSearch(searchQuery);
                 }
               }}
-              className="flex-1 outline-none text-gray-700 placeholder-gray-500 px-4 py-3 text-lg"
+              className="flex-1 text-gray-700 px-4 py-2 text-sm sm:text-base outline-none"
             />
 
             <button
               onClick={() => searchQuery.trim() && onSearch(searchQuery)}
-              className="bg-gradient-to-r from-orange-600 to-orange-500 text-white px-8 py-3 rounded-r-md hover:shadow-lg transition-all duration-200 flex items-center space-x-2 font-semibold"
+              className="bg-orange-600 text-white px-4 sm:px-8 py-2 flex items-center gap-2 text-sm sm:text-base"
             >
               <Search className="h-5 w-5" />
-              <span>Search</span>
+              <span className="hidden sm:inline">Search</span>
             </button>
           </div>
         </div>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-8 pb-4">
-          <a href="/" className="text-gray-700 hover:text-orange-600 font-medium text-sm">
-            Home
-          </a>
-          <a href="/#phones" className="text-gray-700 hover:text-orange-600 transition-colors font-medium text-sm">
-            Phones
-          </a>
-          <a href="/#accessories" className="text-gray-700 hover:text-orange-600 transition-colors font-medium text-sm">
-            Accessories
-          </a>
-          <a href="/#buyback" className="text-gray-700 hover:text-orange-600 transition-colors font-medium text-sm">
-            Sell Your Device
-          </a>
+        {/* DESKTOP NAV */}
+        <nav className="hidden md:flex items-center gap-8 pb-4">
+          <Link href="/" className="text-gray-700 hover:text-orange-600 text-sm">Home</Link>
+          <Link href="/#phones" className="text-gray-700 hover:text-orange-600 text-sm">Phones</Link>
+          <Link href="/#accessories" className="text-gray-700 hover:text-orange-600 text-sm">Accessories</Link>
+          <Link href="/#buyback" className="text-gray-700 hover:text-orange-600 text-sm">Sell Your Device</Link>
         </nav>
 
-        {/* Mobile Menu */}
+        {/* MOBILE NAV */}
         {mobileMenuOpen && (
-          <nav className="md:hidden pb-4 border-t pt-4">
-            <a href="#home" className="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
-              Home
-            </a>
-            <a href="#phones" className="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
-              Phones
-            </a>
-            <a href="#accessories" className="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
-              Accessories
-            </a>
-            <a href="#buyback" className="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
-              Sell Your Device
-            </a>
+          <nav className="md:hidden pb-4 border-t pt-4 space-y-3 text-gray-700">
+            <Link href="/" className="block">Home</Link>
+            <Link href="/#phones" className="block">Phones</Link>
+            <Link href="/#accessories" className="block">Accessories</Link>
+            <Link href="/#buyback" className="block">Sell Your Device</Link>
 
-            <div className="border-t mt-4 pt-4">
+            <div className="border-t pt-3">
               {user ? (
                 <>
                   <Link
                     href="/profile"
-                    className="block py-2 text-gray-700 hover:text-orange-600 transition-colors flex items-center space-x-2"
+                    className="block flex items-center gap-2 py-2"
                   >
-                    <User className="h-4 w-4" />
-                    <span>My Profile</span>
+                    <User className="h-4 w-4" /> Profile
                   </Link>
 
                   <button
                     onClick={handleSignOut}
-                    className="w-full text-left py-2 text-gray-700 hover:text-red-600 transition-colors flex items-center space-x-2"
+                    className="w-full text-left flex gap-2 items-center py-2"
                   >
-                    <LogOut className="h-4 w-4" />
-                    <span>Sign Out</span>
+                    <LogOut className="h-4 w-4" /> Sign Out
                   </button>
                 </>
               ) : (
                 <Link
                   href="/login"
-                  className="block py-2 px-3 bg-gradient-to-r from-orange-600 to-orange-500 text-white rounded-lg text-center font-medium"
+                  className="block text-center bg-orange-600 text-white py-2 rounded-lg"
                 >
                   Sign In
                 </Link>
@@ -217,8 +196,8 @@ export default function Header({ cartCount = 0, onCartClick, onSearch }) {
             </div>
           </nav>
         )}
+
       </div>
     </header>
   );
 }
-

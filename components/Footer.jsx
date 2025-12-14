@@ -29,7 +29,9 @@ export default function Footer() {
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-gray-400">
                 <MapPin className="h-4 w-4" />
-                <a href="https://maps.app.goo.gl/WWdK1GFpnm4iw3wHA">3rd floor, AKR Corniche Center</a>
+                <a href="https://maps.app.goo.gl/WWdK1GFpnm4iw3wHA" target="_blank" className="hover:text-orange-500">
+                      3rd floor, AKR Corniche Center
+                </a>
               </div>
 
               <div className="flex items-center space-x-2 text-gray-400">
