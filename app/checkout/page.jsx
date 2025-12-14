@@ -1,8 +1,13 @@
+export const dynamic = "force-dynamic";
+
 "use client";
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "../../lib/api";
+
+
+
 
 export default function CheckoutPage() {
   const params = useSearchParams();
