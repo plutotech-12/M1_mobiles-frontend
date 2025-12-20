@@ -20,10 +20,10 @@ export default function ProductRow({ title, category, condition, rows = 1 }) {
             {title}
             </h3>
             <a
-            href={`/category/${category}`}
-            className="text-sm font-semibold text-orange-600 hover:underline"
+              href={`/category/${category}?sub=${encodeURIComponent(condition)}`}
+              className="text-sm font-medium text-orange-600 hover:underline"
             >
-            View all
+              View all
             </a>
         </div>
         )}
